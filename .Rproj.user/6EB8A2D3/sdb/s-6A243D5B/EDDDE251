@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? \n#Using the base plotting system, make a plot showing the total PM2.5 emission from all sources \n#for each of the years 1999, 2002, 2005, and 2008.\n\nnei <- readRDS(\"summarySCC_PM25.rds\")\nscc <- readRDS(\"Source_Classification_Code.rds\")\ntotal_emissions <- with(nei, aggregate(Emissions, by = list(year), sum))\n\nplot(total_emissions, type = \"b\", pch = 18, col = \"red\", ylab = \"Emissions\", \n     xlab = \"Year\", main = \"Total Emissions (PM2.5) By Year\")\ndev.copy(png, \"plot1.png\", width=480,height=480)\ndev.off()\n\n",
+    "created" : 1488742445973.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "136458445",
+    "id" : "EDDDE251",
+    "lastKnownWriteTime" : 1482617457,
+    "last_content_update" : 1482617457,
+    "path" : "~/DataScience_JohnsHopkins/ExploratoryAnalysis/week4/plot1.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

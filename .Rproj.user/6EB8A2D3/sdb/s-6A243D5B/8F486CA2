@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(tidyr)\nmydata <- read.csv(\"C:\\\\JohnsHopkins\\\\RepData_PeerAssessment1\\\\activity\\\\activity.csv\")\nhead(mydata)\n\n.packages(\"scales\")\ninstall.packages(\"scales\")",
+    "created" : 1488742349490.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "2685387204",
+    "id" : "8F486CA2",
+    "lastKnownWriteTime" : 3419473789575321445,
+    "last_content_update" : 1488747240680,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

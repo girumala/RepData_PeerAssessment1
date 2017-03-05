@@ -1,0 +1,80 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+## Loading and preprocessing the data
+
+```{r readfile, echo=TRUE}
+library(tidyr)
+mydata <- read.csv("C:\\JohnsHopkins\\RepData_PeerAssessment1\\activity\\activity.csv")
+head(mydata)
+```
+
+## What is mean total number of steps taken per day?
+```{r GenerateHistogram, echo=TRUE}
+library(ggplot2)
+StepsTakenPerDay <- tapply(mydata$steps, mydata$date, sum, na.rm=TRUE)
+qplot(StepsTakenPerDay, xlab="Total Number of steps taken per day", ylab="Count using binwidth 500", binwidth=500)
+```
+
+```{r Calculate Mean, Median, echo=TRUE}
+StepsTakenPerDay <- tapply(mydata$steps, mydata$date, sum, na.rm=TRUE)
+Mean_StepsTakenPerDay <- mean(StepsTakenPerDay)
+Median_StepsTakenPerDay <- median(StepsTakenPerDay)
+Mean_StepsTakenPerDay
+Median_StepsTakenPerDay
+```
+## What is the average daily activity pattern?
+```{r Average Daily Activity Pattern, echo=TRUE}
+library(ggplot2)
+myaverages <- aggregate(x=list(steps=mydata$steps), by=list(interval=mydata$interval),
+                      FUN=mean, na.rm=TRUE)
+ggplot(data=myaverages, aes(x=interval, y=steps)) +
+    geom_line() +
+    xlab("5-minute interval") +
+    ylab("Average number of steps taken")
+myaverages[which.max(myaverages$steps),]
+
+```
+
+
+
+## Imputing missing values
+```{r MissingValues, echo=TRUE}
+RowswithNA <- length(which(is.na(mydata$steps)))
+RowswithNA
+```
+```{r ReplaceMissingwithmean, echo=TRUE}
+library(scales)
+library(Hmisc)
+mydataImputed <- mydata
+mydataImputed$steps <- impute(mydata$steps, fun=mean)
+StepsByDayImputed <- tapply(mydataImputed$steps, mydataImputed$date, sum)
+qplot(StepsByDayImputed, xlab='Total steps per day (Imputed)', ylab='Frequency using binwith 500', binwidth=500)
+
+StepsByDayMeanImputed <- mean(StepsByDayImputed)
+StepsByDayMedianImputed <- median(StepsByDayImputed)
+StepsByDayMeanImputed
+StepsByDayMedianImputed
+```
+### Do these values differ from the estimates from the first part of the assignment? 
+ Yes. These mean and median are higher
+ 
+### What is the impact of imputing missing data on the estimates of the total daily number of steps
+ Distribution of data is even and it is not left skewed
+
+## Are there differences in activity patterns between weekdays and weekends?
+
+```{r DifferenceInActivityWeekdayWeekend, echo=TRUE}
+mydataImputed$dateType <-  ifelse(as.POSIXlt(mydataImputed$date)$wday %in% c(0,6), 'weekend', 'weekday')
+averagedmydataImputed <- aggregate(steps ~ interval + dateType, data=mydataImputed, mean)
+ggplot(averagedmydataImputed, aes(interval, steps)) + 
+    geom_line() + 
+    facet_grid(dateType ~ .) +
+    xlab("5-minute interval") + 
+    ylab("avarage number of steps")
+```

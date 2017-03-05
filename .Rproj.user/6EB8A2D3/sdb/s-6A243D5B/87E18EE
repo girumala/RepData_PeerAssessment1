@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Reproducible Research: Peer Assessment 1\"\noutput: \n  html_document:\n    keep_md: true\n---\n\n\n## Loading and preprocessing the data\n\n```{r readfile, echo=TRUE}\nlibrary(tidyr)\nmydata <- read.csv(\"C:\\\\JohnsHopkins\\\\RepData_PeerAssessment1\\\\activity\\\\activity.csv\")\nhead(mydata)\n```\n\n## What is mean total number of steps taken per day?\n```{r GenerateHistogram, echo=TRUE}\nlibrary(ggplot2)\nStepsTakenPerDay <- tapply(mydata$steps, mydata$date, sum, na.rm=TRUE)\nqplot(StepsTakenPerDay, xlab=\"Total Number of steps taken per day\", ylab=\"Count using binwidth 500\", binwidth=500)\n```\n\n```{r Calculate Mean, Median, echo=TRUE}\nStepsTakenPerDay <- tapply(mydata$steps, mydata$date, sum, na.rm=TRUE)\nMean_StepsTakenPerDay <- mean(StepsTakenPerDay)\nMedian_StepsTakenPerDay <- median(StepsTakenPerDay)\nMean_StepsTakenPerDay\nMedian_StepsTakenPerDay\n```\n## What is the average daily activity pattern?\n```{r Average Daily Activity Pattern, echo=TRUE}\nlibrary(ggplot2)\nmyaverages <- aggregate(x=list(steps=mydata$steps), by=list(interval=mydata$interval),\n                      FUN=mean, na.rm=TRUE)\nggplot(data=myaverages, aes(x=interval, y=steps)) +\n    geom_line() +\n    xlab(\"5-minute interval\") +\n    ylab(\"Average number of steps taken\")\nmyaverages[which.max(myaverages$steps),]\n\n```\n\n\n\n## Imputing missing values\n```{r MissingValues, echo=TRUE}\nRowswithNA <- length(which(is.na(mydata$steps)))\nRowswithNA\n```\n```{r ReplaceMissingwithmean, echo=TRUE}\nlibrary(scales)\nlibrary(Hmisc)\nmydataImputed <- mydata\nmydataImputed$steps <- impute(mydata$steps, fun=mean)\nStepsByDayImputed <- tapply(mydataImputed$steps, mydataImputed$date, sum)\nqplot(StepsByDayImputed, xlab='Total steps per day (Imputed)', ylab='Frequency using binwith 500', binwidth=500)\n\nStepsByDayMeanImputed <- mean(StepsByDayImputed)\nStepsByDayMedianImputed <- median(StepsByDayImputed)\nStepsByDayMeanImputed\nStepsByDayMedianImputed\n```\n### Do these values differ from the estimates from the first part of the assignment? \n Yes. These mean and median are higher\n \n### What is the impact of imputing missing data on the estimates of the total daily number of steps\n Distribution of data is even and it is not left skewed\n\n## Are there differences in activity patterns between weekdays and weekends?\n\n```{r DifferenceInActivityWeekdayWeekend, echo=TRUE}\nmydataImputed$dateType <-  ifelse(as.POSIXlt(mydataImputed$date)$wday %in% c(0,6), 'weekend', 'weekday')\naveragedmydataImputed <- aggregate(steps ~ interval + dateType, data=mydataImputed, mean)\nggplot(averagedmydataImputed, aes(interval, steps)) + \n    geom_line() + \n    facet_grid(dateType ~ .) +\n    xlab(\"5-minute interval\") + \n    ylab(\"avarage number of steps\")\n```",
+    "created" : 1488743632979.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "820129887",
+    "id" : "87E18EE",
+    "lastKnownWriteTime" : 1488747972,
+    "last_content_update" : 1488747972097,
+    "path" : "C:/JohnsHopkins/RepData_PeerAssessment1/PA1_template.Rmd",
+    "project_path" : "PA1_template.Rmd",
+    "properties" : {
+        "source_window_id" : ""
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

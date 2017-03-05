@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# How have emissions from motor vehicle sources changed from 1999-2008 in Baltimore City?\n#Compare emissions from motor vehicle sources in Baltimore City with emissions from motor \n#vehicle sources in Los Angeles County, California (fips == \"06037\"). \n#Which city has seen greater changes over time in motor vehicle emissions?\n\nlibrary(ggplot2)\nnei <- readRDS(\"summarySCC_PM25.rds\")\nscc <- readRDS(\"Source_Classification_Code.rds\")\n\n\nvehicles <- grepl(\"vehicle\", scc$SCC.Level.Two, ignore.case=TRUE)\n\nvehiclesSCC <- scc[vehicles,]$SCC\n\nvehiclesNEI <- nei[nei$SCC %in% vehiclesSCC,]\n\n\nvehiclesBaltimoreNEI <- vehiclesNEI[vehiclesNEI$fips == 24510,]\nvehiclesBaltimoreNEI$city <- \"Baltimore City\"\n\nvehiclesLosAngelesNEI <- vehiclesNEI[vehiclesNEI$fips==\"06037\",]\nvehiclesLosAngelesNEI$city <- \"Los Angeles County, California\"\n\nbothNEI <- rbind(vehiclesBaltimoreNEI,vehiclesLosAngelesNEI)\n\n\nggp <- ggplot(bothNEI, aes(x=factor(year), y=Emissions, fill=city)) +\n        geom_bar(aes(fill=year),stat=\"identity\") +\n        facet_grid(scales=\"free\", space=\"free\", .~city) +\n        guides(fill=FALSE) + theme_bw() +\n        labs(x=\"Year\", y=expression(\"Total Emissions PM2.5\")) + \n        labs(title=expression(\"Motor Vehicle Source Emissions PM2.5 in Baltimore & LA by Year\"))\n\n\nprint(ggp)\ndev.copy(png, \"plot6.png\", width=480,height=480)\ndev.off()\n",
+    "created" : 1488742435196.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "194892681",
+    "id" : "9BC63B1",
+    "lastKnownWriteTime" : 1482617338,
+    "last_content_update" : 1482617338,
+    "path" : "~/DataScience_JohnsHopkins/ExploratoryAnalysis/week4/plot6.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
